@@ -73,7 +73,7 @@ public class GroupServiceImp implements GroupService {
             List<Member> member = new ArrayList();
             for (int i = 0; i < list.size(); i++) {
                 int memId = list.get(i).getMemberId();
-                Member tempMem = restTemplate.getForObject("http://localhost:8080/" + memId, Member.class);
+                Member tempMem = restTemplate.getForObject("http://MEMBER-SERVICE/" + memId, Member.class);
                 member.add(tempMem);
             }
             responseVoTemplate.setMember(member);
