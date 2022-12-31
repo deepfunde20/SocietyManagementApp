@@ -1,5 +1,6 @@
 package com.dee.group.service.service;
 
+import com.dee.group.service.dto.GroupMemberDto;
 import com.dee.group.service.entity.Group_Member;
 import com.dee.group.service.entity.MyGroup;
 import com.dee.group.service.exception.GroupAlreadyExistException;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface GroupService {
 
     MyGroup createGroup(MyGroup myGroup) throws GroupAlreadyExistException;
-    void addMember(Group_Member gm, int groupId) throws MemberAlreadyInGroupException;
+    void addMember(GroupMemberDto gm, int groupId) throws MemberAlreadyInGroupException;
     List<Member> getMemberList();
     MyGroup updateGroupDetails();
 
