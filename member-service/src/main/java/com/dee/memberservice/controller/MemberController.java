@@ -1,5 +1,6 @@
 package com.dee.memberservice.controller;
 
+import com.dee.memberservice.dto.MemberDto;
 import com.dee.memberservice.entity.Member;
 import com.dee.memberservice.newException.MemberAlreadyExistException;
 import com.dee.memberservice.newException.UserNotFoundException;
@@ -18,20 +19,14 @@ public class MemberController {
     MemberService service;
 
     @PostMapping("/signup")
-    public Member saveUser(@RequestBody @Valid Member user) throws MemberAlreadyExistException {
+    public Member saveUser(@RequestBody @Valid MemberDto user) throws MemberAlreadyExistException {
      return   service.saveUser(user);
 
     }
 
     @GetMapping("/{id}")
-    public Member getUser(@PathVariable("id") int id) throws UserNotFoundException {
+    public MemberDto getUser(@PathVariable("id") int id) throws UserNotFoundException {
         return   service.getUser(id);
     }
-
-//    @GetMapping("/group/{groupId}")
-//    public List<Member> getByGroupId(@PathVariable("groupId") int groupId){
-//       return service.getByGroupId(groupId);
-//
-//    }
 
 }
