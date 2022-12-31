@@ -1,5 +1,6 @@
 package com.dee.group.service.controller;
 
+import com.dee.group.service.dto.GroupMemberDto;
 import com.dee.group.service.entity.Group_Member;
 import com.dee.group.service.entity.MyGroup;
 import com.dee.group.service.exception.GroupAlreadyExistException;
@@ -27,7 +28,7 @@ public class GroupController {
     }
 
     @PostMapping("/{id}/addMember")
-    public void addMember(@PathVariable("id") int groupId , @RequestBody Group_Member gm ) throws MemberAlreadyInGroupException {
+    public void addMember(@PathVariable("id") int groupId , @RequestBody GroupMemberDto gm ) throws MemberAlreadyInGroupException {
         groupServiceImp.addMember(gm,groupId);
     }
 

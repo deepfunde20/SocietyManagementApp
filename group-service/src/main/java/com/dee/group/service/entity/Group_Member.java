@@ -18,7 +18,6 @@ public class Group_Member {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
     private int groupId;
     private int memberId;
 

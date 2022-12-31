@@ -1,13 +1,20 @@
 package com.dee.group.service.service;
 
+import com.dee.group.service.dto.MeetingDto;
 import com.dee.group.service.entity.Meeting;
 import com.dee.group.service.entity.MyGroup;
 import com.dee.group.service.exception.MeetingNotFoundException;
 import com.dee.group.service.repository.MeetingRepository;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.description.method.MethodDescription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.List;
+
+import org.modelmapper.TypeToken;
+
 
 @Service
 public class MeetingServiceImp implements MeetingService{
@@ -15,10 +22,14 @@ public class MeetingServiceImp implements MeetingService{
 
     @Autowired
     MeetingRepository meetingRepository;
-    @Override
-    public Meeting createMeeting(Meeting meeting) {
 
-        return meetingRepository.save(meeting);
+    @Autowired
+    ModelMapper modelMapper;
+    @Override
+    public Meeting createMeeting(MeetingDto meetingDto) {
+
+       Meeting tempMeet = modelMapper.map(meetingDto,Meeting.class);
+        return meetingRepository.save(tempMeet);
 
     }
 
@@ -28,8 +39,12 @@ public class MeetingServiceImp implements MeetingService{
     }
 
     @Override
-    public List<Meeting> meetingList(int groupId) {
-        return  meetingRepository.findAllByGroupId(groupId);
+    public List<MeetingDto> meetingList(int groupId) {
+        List<Meeting> meetings =  meetingRepository.findAllByGroupId(groupId);
+        Type listType = new TypeToken<List<MeetingDto>>(){}.getType();
+
+       return modelMapper.map(meetings, listType);
+
     }
 
     @Override

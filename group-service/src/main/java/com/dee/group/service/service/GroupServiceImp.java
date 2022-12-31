@@ -1,5 +1,6 @@
 package com.dee.group.service.service;
 
+import com.dee.group.service.dto.GroupMemberDto;
 import com.dee.group.service.entity.Group_Member;
 import com.dee.group.service.entity.MyGroup;
 import com.dee.group.service.exception.GroupAlreadyExistException;
@@ -9,6 +10,7 @@ import com.dee.group.service.repository.GroupMemberRepository;
 import com.dee.group.service.repository.GroupRepository;
 import com.dee.group.service.vo.Member;
 import com.dee.group.service.vo.ResponseVoTemplate;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -27,6 +29,9 @@ public class GroupServiceImp implements GroupService {
     @Autowired
     GroupMemberRepository groupMemberRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     @Override
     public MyGroup createGroup(MyGroup myGroup) throws GroupAlreadyExistException {
         MyGroup tempGroup = groupRepository.findByGroupName(myGroup.getGroupName());
@@ -35,17 +40,16 @@ public class GroupServiceImp implements GroupService {
         } else {
             throw new GroupAlreadyExistException("This group is already registerd try with some different name");
         }
-
     }
 
     @Override
-    public void addMember(Group_Member gm, int groupId) throws MemberAlreadyInGroupException {
-        gm.setGroupId(groupId);
-        Group_Member memberPresentInGroup = groupMemberRepository.findByMemberIdAndGroupId(gm.getMemberId(), groupId);
+    public void  addMember(GroupMemberDto gmdto, int groupId) throws MemberAlreadyInGroupException {
+        gmdto.setGroupId(groupId);
+        Group_Member memberPresentInGroup = groupMemberRepository.findByMemberIdAndGroupId(gmdto.getMemberId(), groupId);
         if (memberPresentInGroup == null) {
-            groupMemberRepository.save(gm);
+            groupMemberRepository.save(modelMapper.map(gmdto,Group_Member.class));
         } else {
-            throw new MemberAlreadyInGroupException("The member with id : " + gm.getMemberId() + " already present in group");
+            throw new MemberAlreadyInGroupException("The member with id : " + gmdto.getMemberId() + " already present in group");
         }
     }
 
@@ -61,12 +65,8 @@ public class GroupServiceImp implements GroupService {
 
     @Override
     public ResponseVoTemplate getGroup(int groupId) throws GroupNotFoundException {
-
-
         ResponseVoTemplate responseVoTemplate = new ResponseVoTemplate();
-
         boolean groupPresent = groupRepository.findById(groupId).isPresent();
-
         if (groupPresent == true) {
             MyGroup group = groupRepository.findById(groupId).get();
             List<Group_Member> list = groupMemberRepository.findByGroupId(groupId);
@@ -96,10 +96,7 @@ public class GroupServiceImp implements GroupService {
             } else {
                 throw new GroupNotFoundException("The group associated with the member do not exist");
             }
-
         }
-
         return groupList;
-
     }
 }
