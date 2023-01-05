@@ -1,13 +1,11 @@
 package com.dee.group.service.controller;
 
 import com.dee.group.service.dto.GroupMemberDto;
-import com.dee.group.service.entity.Group_Member;
 import com.dee.group.service.entity.MyGroup;
 import com.dee.group.service.exception.GroupAlreadyExistException;
 import com.dee.group.service.exception.GroupNotFoundException;
 import com.dee.group.service.exception.MemberAlreadyInGroupException;
 import com.dee.group.service.service.GroupServiceImp;
-import com.dee.group.service.vo.Member;
 import com.dee.group.service.vo.ResponseVoTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

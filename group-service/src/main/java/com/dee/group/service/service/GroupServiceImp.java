@@ -8,7 +8,7 @@ import com.dee.group.service.exception.GroupNotFoundException;
 import com.dee.group.service.exception.MemberAlreadyInGroupException;
 import com.dee.group.service.repository.GroupMemberRepository;
 import com.dee.group.service.repository.GroupRepository;
-import com.dee.group.service.vo.Member;
+import com.dee.group.service.vo.MemberDto;
 import com.dee.group.service.vo.ResponseVoTemplate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class GroupServiceImp implements GroupService {
     }
 
     @Override
-    public List<Member> getMemberList() {
+    public List<MemberDto> getMemberList() {
         return null;
     }
 
@@ -68,18 +68,20 @@ public class GroupServiceImp implements GroupService {
         ResponseVoTemplate responseVoTemplate = new ResponseVoTemplate();
         boolean groupPresent = groupRepository.findById(groupId).isPresent();
         if (groupPresent == true) {
+            System.out.println("You are in true state");
             MyGroup group = groupRepository.findById(groupId).get();
             List<Group_Member> list = groupMemberRepository.findByGroupId(groupId);
-            List<Member> member = new ArrayList();
+            List<MemberDto> member = new ArrayList();
             for (int i = 0; i < list.size(); i++) {
                 int memId = list.get(i).getMemberId();
-                Member tempMem = restTemplate.getForObject("http://MEMBER-SERVICE/" + memId, Member.class);
+                MemberDto tempMem = restTemplate.getForObject("http://MEMBER-SERVICE/member/" + memId, MemberDto.class);
                 member.add(tempMem);
             }
             responseVoTemplate.setMember(member);
             responseVoTemplate.setMyGroup(group);
             return responseVoTemplate;
         } else {
+            System.out.println("You are in false state");
             throw new GroupNotFoundException("Group not found with the id: " + groupId);
         }
 

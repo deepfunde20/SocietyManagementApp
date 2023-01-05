@@ -1,14 +1,12 @@
 package com.dee.group.service.entity;
 
 
-import com.dee.group.service.vo.Member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Entity
 @Data
