@@ -6,6 +6,7 @@ import com.dee.group.service.entity.MyGroup;
 import com.dee.group.service.exception.GroupAlreadyExistException;
 import com.dee.group.service.exception.GroupNotFoundException;
 import com.dee.group.service.exception.MemberAlreadyInGroupException;
+import com.dee.group.service.exception.MemberServiceDownException;
 import com.dee.group.service.repository.GroupMemberRepository;
 import com.dee.group.service.repository.GroupRepository;
 import com.dee.group.service.vo.MemberDto;
@@ -13,6 +14,7 @@ import com.dee.group.service.vo.ResponseVoTemplate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -64,7 +66,7 @@ public class GroupServiceImp implements GroupService {
     }
 
     @Override
-    public ResponseVoTemplate getGroup(int groupId) throws GroupNotFoundException {
+    public ResponseVoTemplate getGroup(int groupId) throws MemberServiceDownException, GroupNotFoundException {
         ResponseVoTemplate responseVoTemplate = new ResponseVoTemplate();
         boolean groupPresent = groupRepository.findById(groupId).isPresent();
         if (groupPresent == true) {
@@ -72,10 +74,18 @@ public class GroupServiceImp implements GroupService {
             MyGroup group = groupRepository.findById(groupId).get();
             List<Group_Member> list = groupMemberRepository.findByGroupId(groupId);
             List<MemberDto> member = new ArrayList();
-            for (int i = 0; i < list.size(); i++) {
-                int memId = list.get(i).getMemberId();
-                MemberDto tempMem = restTemplate.getForObject("http://MEMBER-SERVICE/member/" + memId, MemberDto.class);
-                member.add(tempMem);
+            try {
+                for (int i = 0; i < list.size(); i++) {
+                    int memId = list.get(i).getMemberId();
+                    MemberDto tempMem = restTemplate.getForObject("http://MEMBER-SERVICE/member/" + memId, MemberDto.class);
+                    member.add(tempMem);
+                }
+            }catch(ResourceAccessException e){
+                e.printStackTrace();
+                throw new MemberServiceDownException("Member service is down");
+            }catch(IllegalStateException e){
+                e.printStackTrace();
+                throw new MemberServiceDownException("Member service is down");
             }
             responseVoTemplate.setMember(member);
             responseVoTemplate.setMyGroup(group);

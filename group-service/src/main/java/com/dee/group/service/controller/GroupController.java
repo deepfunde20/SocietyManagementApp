@@ -5,6 +5,7 @@ import com.dee.group.service.entity.MyGroup;
 import com.dee.group.service.exception.GroupAlreadyExistException;
 import com.dee.group.service.exception.GroupNotFoundException;
 import com.dee.group.service.exception.MemberAlreadyInGroupException;
+import com.dee.group.service.exception.MemberServiceDownException;
 import com.dee.group.service.service.GroupServiceImp;
 import com.dee.group.service.vo.ResponseVoTemplate;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -34,8 +35,8 @@ public class GroupController {
     private static final String SERVICE_GROUP ="serviceGroup";
 
     @GetMapping("/{id}")
-    @CircuitBreaker(name=SERVICE_GROUP, fallbackMethod = "serviceGroupFallBack")
-    public ResponseVoTemplate getGroup(@PathVariable ("id") int groupId) throws GroupNotFoundException {
+    @CircuitBreaker(name=SERVICE_GROUP)
+    public ResponseVoTemplate getGroup(@PathVariable ("id") int groupId) throws GroupNotFoundException, MemberServiceDownException {
         return groupServiceImp.getGroup(groupId);
     }
 

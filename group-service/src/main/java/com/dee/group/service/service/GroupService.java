@@ -5,6 +5,7 @@ import com.dee.group.service.entity.MyGroup;
 import com.dee.group.service.exception.GroupAlreadyExistException;
 import com.dee.group.service.exception.GroupNotFoundException;
 import com.dee.group.service.exception.MemberAlreadyInGroupException;
+import com.dee.group.service.exception.MemberServiceDownException;
 import com.dee.group.service.vo.MemberDto;
 import com.dee.group.service.vo.ResponseVoTemplate;
 
@@ -17,6 +18,6 @@ public interface GroupService {
     List<MemberDto> getMemberList();
     MyGroup updateGroupDetails();
 
-    ResponseVoTemplate getGroup(int id) throws GroupNotFoundException;
+    ResponseVoTemplate getGroup(int id) throws GroupNotFoundException, MemberServiceDownException;
 
 }
