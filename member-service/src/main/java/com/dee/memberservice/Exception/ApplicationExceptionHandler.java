@@ -33,6 +33,7 @@ public class ApplicationExceptionHandler {
 
         Map<String , String> errorMap = new HashMap<>();
        errorMap.put("errorMessage", ex.getMessage());
+        ex.printStackTrace();
         return errorMap;
     }
 
