@@ -7,6 +7,7 @@ import com.dee.group.service.exception.GroupNotFoundException;
 import com.dee.group.service.exception.MemberAlreadyInGroupException;
 import com.dee.group.service.service.GroupServiceImp;
 import com.dee.group.service.vo.ResponseVoTemplate;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +31,17 @@ public class GroupController {
         groupServiceImp.addMember(gm,groupId);
     }
 
+    private static final String SERVICE_GROUP ="serviceGroup";
+
     @GetMapping("/{id}")
+    @CircuitBreaker(name=SERVICE_GROUP, fallbackMethod = "serviceGroupFallBack")
     public ResponseVoTemplate getGroup(@PathVariable ("id") int groupId) throws GroupNotFoundException {
         return groupServiceImp.getGroup(groupId);
+    }
+
+    public ResponseVoTemplate serviceGroupFallBack(Exception e){
+        e.printStackTrace();
+        return null;
     }
 
     @GetMapping("/member/{id}")
