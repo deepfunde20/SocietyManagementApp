@@ -13,11 +13,13 @@ import com.dee.group.service.vo.MemberDto;
 import com.dee.group.service.vo.ResponseVoTemplate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -45,11 +47,11 @@ public class GroupServiceImp implements GroupService {
     }
 
     @Override
-    public void  addMember(GroupMemberDto gmdto, int groupId) throws MemberAlreadyInGroupException {
+    public void addMember(GroupMemberDto gmdto, int groupId) throws MemberAlreadyInGroupException {
         gmdto.setGroupId(groupId);
         Group_Member memberPresentInGroup = groupMemberRepository.findByMemberIdAndGroupId(gmdto.getMemberId(), groupId);
         if (memberPresentInGroup == null) {
-            groupMemberRepository.save(modelMapper.map(gmdto,Group_Member.class));
+            groupMemberRepository.save(modelMapper.map(gmdto, Group_Member.class));
         } else {
             throw new MemberAlreadyInGroupException("The member with id : " + gmdto.getMemberId() + " already present in group");
         }
@@ -66,7 +68,7 @@ public class GroupServiceImp implements GroupService {
     }
 
     @Override
-    public ResponseVoTemplate getGroup(int groupId) throws MemberServiceDownException, GroupNotFoundException {
+    public ResponseVoTemplate getGroup(int groupId, String jwtToken) throws MemberServiceDownException, GroupNotFoundException {
         ResponseVoTemplate responseVoTemplate = new ResponseVoTemplate();
         boolean groupPresent = groupRepository.findById(groupId).isPresent();
         if (groupPresent == true) {
@@ -75,15 +77,26 @@ public class GroupServiceImp implements GroupService {
             List<Group_Member> list = groupMemberRepository.findByGroupId(groupId);
             List<MemberDto> member = new ArrayList();
             try {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+                headers.add("Authorization", jwtToken);
+
+                HttpEntity request = new HttpEntity(headers);
                 for (int i = 0; i < list.size(); i++) {
                     int memId = list.get(i).getMemberId();
-                    MemberDto tempMem = restTemplate.getForObject("http://MEMBER-SERVICE/member/" + memId, MemberDto.class);
-                    member.add(tempMem);
+                    ResponseEntity<MemberDto> response = restTemplate.exchange(
+                            "http://MEMBER-SERVICE/member/" + memId,
+                            HttpMethod.GET,
+                            request,
+                            MemberDto.class,
+                            1
+                    );
+                    member.add(response.getBody());
                 }
-            }catch(ResourceAccessException e){
+            } catch (ResourceAccessException e) {
                 e.printStackTrace();
                 throw new MemberServiceDownException("Member service is down");
-            }catch(IllegalStateException e){
+            } catch (IllegalStateException e) {
                 e.printStackTrace();
                 throw new MemberServiceDownException("Member service is down");
             }
@@ -94,8 +107,6 @@ public class GroupServiceImp implements GroupService {
             System.out.println("You are in false state");
             throw new GroupNotFoundException("Group not found with the id: " + groupId);
         }
-
-
     }
 
     public List<MyGroup> findGroupsByMemberId(int memId) throws GroupNotFoundException {

@@ -21,6 +21,7 @@ public class GroupServiceApplication {
 	@Bean
 	@LoadBalanced
 	public RestTemplate restTemplate(){
+
 		return new RestTemplate();
 	}
 
