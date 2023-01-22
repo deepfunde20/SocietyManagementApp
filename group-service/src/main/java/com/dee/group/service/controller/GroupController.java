@@ -36,9 +36,9 @@ public class GroupController {
 
     @GetMapping("/{id}")
     @CircuitBreaker(name=SERVICE_GROUP)
-    public ResponseVoTemplate getGroup(@PathVariable ("id") int groupId, @RequestHeader (value = "Authorization") String authorizationToken) throws GroupNotFoundException, MemberServiceDownException {
+    public ResponseVoTemplate getGroup(@PathVariable ("id") int groupId)  throws GroupNotFoundException, MemberServiceDownException {
 
-        return groupServiceImp.getGroup(groupId, authorizationToken);
+        return groupServiceImp.getGroup(groupId);
     }
 
     public ResponseVoTemplate serviceGroupFallBack(Exception e){

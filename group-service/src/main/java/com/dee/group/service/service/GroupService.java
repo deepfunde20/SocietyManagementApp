@@ -18,6 +18,6 @@ public interface GroupService {
     List<MemberDto> getMemberList();
     MyGroup updateGroupDetails();
 
-    ResponseVoTemplate getGroup(int id, String jwtToken) throws GroupNotFoundException, MemberServiceDownException;
+    ResponseVoTemplate getGroup(int id) throws GroupNotFoundException, MemberServiceDownException;
 
 }

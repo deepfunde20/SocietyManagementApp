@@ -68,7 +68,7 @@ public class GroupServiceImp implements GroupService {
     }
 
     @Override
-    public ResponseVoTemplate getGroup(int groupId, String jwtToken) throws MemberServiceDownException, GroupNotFoundException {
+    public ResponseVoTemplate getGroup(int groupId) throws MemberServiceDownException, GroupNotFoundException {
         ResponseVoTemplate responseVoTemplate = new ResponseVoTemplate();
         boolean groupPresent = groupRepository.findById(groupId).isPresent();
         if (groupPresent == true) {
@@ -79,7 +79,7 @@ public class GroupServiceImp implements GroupService {
             try {
                 HttpHeaders headers = new HttpHeaders();
                 headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-                headers.add("Authorization", jwtToken);
+
 
                 HttpEntity request = new HttpEntity(headers);
                 for (int i = 0; i < list.size(); i++) {
