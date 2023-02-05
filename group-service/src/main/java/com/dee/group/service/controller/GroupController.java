@@ -46,6 +46,7 @@ public class GroupController {
         return null;
     }
 
+    @CrossOrigin
     @GetMapping("/member/{id}")
     public List<MyGroup> getAllGroups(@PathVariable ("id") int memId) throws GroupNotFoundException {
       return groupServiceImp.findGroupsByMemberId(memId);

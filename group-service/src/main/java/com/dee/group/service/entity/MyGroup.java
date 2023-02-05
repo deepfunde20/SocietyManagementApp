@@ -20,6 +20,7 @@ public class MyGroup {
     private int id;
     @NotNull(message = "Name should not be null")
     private String groupName;
+    private String image;
 
 
 }

@@ -12,4 +12,5 @@ public class MeetingDto {
 
 
     private String time;
+    private String scheduledTime;
 }

@@ -10,6 +10,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class MemberServiceImp implements MemberService{
@@ -44,6 +47,18 @@ public class MemberServiceImp implements MemberService{
       }else{
           throw new UserNotFoundException("This member id do not exist");
       }
+    }
+
+    @Override
+    public List<MemberDto> getAllUsers() {
+     List<Member>  members =   repository.findAll();
+
+        List<MemberDto> dtos = members
+                .stream()
+                .map(user -> modelMapper.map(user, MemberDto.class))
+                .collect(Collectors.toList());
+
+        return  dtos;
     }
 
 }

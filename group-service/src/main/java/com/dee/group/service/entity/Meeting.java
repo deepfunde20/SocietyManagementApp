@@ -27,6 +27,8 @@ public class Meeting {
 
     private String time;
 
+    private String scheduledTime;
+
 
     @PrePersist
     private void onCreate(){
