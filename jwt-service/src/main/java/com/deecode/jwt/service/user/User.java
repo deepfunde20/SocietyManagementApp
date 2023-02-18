@@ -9,6 +9,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,9 +26,15 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
+    @NotNull(message = " First Name should not be null")
     private String firstname;
     private String lastname;
+
+
+    @Email
     private String email;
+
+
     private String password;
 
     @Enumerated(EnumType.STRING)
