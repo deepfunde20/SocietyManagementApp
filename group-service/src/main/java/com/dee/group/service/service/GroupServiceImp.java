@@ -25,6 +25,14 @@ import java.util.List;
 @Service
 public class GroupServiceImp implements GroupService {
 
+    public GroupServiceImp(GroupRepository groupRepository,GroupMemberRepository groupMemberRepository, ModelMapper modelMapper) {
+        this.groupRepository = groupRepository;
+        this.groupMemberRepository = groupMemberRepository;
+        this.modelMapper = modelMapper;
+    }
+
+
+
     @Autowired
     GroupRepository groupRepository;
     @Autowired
@@ -35,6 +43,8 @@ public class GroupServiceImp implements GroupService {
 
     @Autowired
     ModelMapper modelMapper;
+
+
 
     @Override
     public MyGroup createGroup(MyGroup myGroup) throws GroupAlreadyExistException {
