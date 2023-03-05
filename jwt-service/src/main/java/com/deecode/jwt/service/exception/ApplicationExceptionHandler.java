@@ -2,6 +2,7 @@ package com.deecode.jwt.service.exception;
 
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,6 +40,15 @@ public class ApplicationExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidDataException.class)
     public Map<String , String> handleBusinessException(InvalidDataException  ex){
+
+        Map<String , String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", ex.getMessage());
+        return errorMap;
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public Map<String , String> handleBusinessException(UsernameNotFoundException  ex){
 
         Map<String , String> errorMap = new HashMap<>();
         errorMap.put("errorMessage", ex.getMessage());

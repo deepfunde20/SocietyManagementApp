@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -58,15 +59,24 @@ public class AuthenticationService {
 
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws UsernameNotFoundException {
+
+
+        Optional<User> user= repository.findByEmail(request.getEmail());
+
+      try{
+          user.get();
+      }catch (NoSuchElementException e){
+         throw new UsernameNotFoundException("User is not present");
+      }
+
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword())
         );
-        var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
 
-        var jwtToken = jwtService.generateToken(user);
+
+        var jwtToken = jwtService.generateToken(user.get());
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
