@@ -33,4 +33,7 @@ public class Member {
 
     private String image;
 
+  @NotNull(message = "User id should not be null")
+    private int userId;
+
 }

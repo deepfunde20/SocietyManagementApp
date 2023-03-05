@@ -29,9 +29,10 @@ public class MemberController {
         return   service.getUser(id);
     }
 
-    @GetMapping("/allMember")
-    public List<MemberDto> getAllUsers(){
-        return  service.getAllUsers();
+    @GetMapping("/allMember/{userId}")
+    public List<MemberDto> getAllUsers(@PathVariable("userId") int userId){
+
+        return  service.getAllMembersByUseId(userId);
     }
 
 }

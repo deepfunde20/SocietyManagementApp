@@ -119,9 +119,9 @@ public class GroupServiceImp implements GroupService {
         }
     }
 
-    public List<MyGroup> findGroupsByMemberId(int memId) throws GroupNotFoundException {
+    public List<MyGroup> findGroupsByUserId(int userId) throws GroupNotFoundException {
 
-        List<Group_Member> group = groupMemberRepository.findByMemberId(memId);
+        List<Group_Member> group = groupMemberRepository.findByUserId(userId);
         List<MyGroup> groupList = new ArrayList<>();
         for (int i = 0; i < group.size(); i++) {
             if (groupRepository.findById(group.get(i).getGroupId()).isPresent()) {

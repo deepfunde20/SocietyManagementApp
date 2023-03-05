@@ -50,8 +50,8 @@ public class MemberServiceImp implements MemberService{
     }
 
     @Override
-    public List<MemberDto> getAllUsers() {
-     List<Member>  members =   repository.findAll();
+    public List<MemberDto> getAllMembersByUseId(int userId) {
+     List<Member>  members =   repository.findByUserId(userId);
 
         List<MemberDto> dtos = members
                 .stream()

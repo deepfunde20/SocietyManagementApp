@@ -12,5 +12,5 @@ public interface MemberService {
     Member saveUser(MemberDto memberDto) throws MemberAlreadyExistException;
     MemberDto getUser(int id) throws UserNotFoundException;
 
-    List<MemberDto> getAllUsers();
+    List<MemberDto> getAllMembersByUseId(int id);
 }

@@ -21,4 +21,7 @@ public class MemberDto {
     private String email;
 
     private String image;
+
+    @NotNull(message = "User id should not be null")
+    private int userId;
 }

@@ -20,5 +20,6 @@ public class Group_Member {
     private int id;
     private int groupId;
     private int memberId;
+    private int userId;
 
 }
